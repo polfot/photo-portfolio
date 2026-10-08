@@ -1,0 +1,14 @@
+/* Bottom-left, like the About page content. */
+.notFound {
+  display: grid;
+  align-content: end;
+  justify-items: start;
+  gap: var(--space-xs);
+  height: 100%;
+  padding: var(--space-section) var(--space-gutter);
+}
+
+.message {
+  font-size: var(--text-md);
+  font-weight: 400;
+}

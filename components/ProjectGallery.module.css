@@ -1,0 +1,129 @@
+/*
+ * Two columns filling the screen, closed by a hairline: project text on the left,
+ * a wider photo viewer on the right. Content starts right under the header, whose
+ * own spacing already separates them, so the photo gets as much height as possible.
+ */
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: var(--space-section);
+  height: 100%;
+  margin: 0 var(--space-gutter);
+  padding-bottom: var(--space-gutter);
+  border-bottom: var(--border-hairline);
+}
+
+/* Title and description start lower than the Prev/Next row, beside the photo itself. */
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-section);
+  padding-top: calc(var(--space-section) * 2);
+}
+
+/* Title above the description, top of the left column. */
+.intro {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.title {
+  font-size: var(--text-md);
+  font-weight: 400;
+}
+
+.description {
+  max-width: var(--measure-text);
+  line-height: var(--leading-tight);
+}
+
+.details,
+.controls,
+.caption {
+  font-size: var(--text-xs);
+}
+
+/* Controls and caption keep their height; the photo frame takes whatever is left. */
+.viewer {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-xs);
+  min-height: 0;
+}
+
+/* Prev on the left, counter in the middle, Next on the right. */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+
+/* Fills the free height, so portrait and landscape photos keep the layout steady. */
+.frame {
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Fades out quickly, swaps, then fades back in once the next photo has loaded (ProjectGallery.tsx). */
+.photo {
+  height: 100%;
+  object-fit: contain;
+  transition: opacity var(--motion-fade-in) ease;
+}
+
+.photo[data-visible="false"] {
+  opacity: 0;
+  transition-duration: var(--motion-fade-out);
+}
+
+.caption {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 767px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-gutter);
+    height: auto;
+    padding-top: var(--space-gutter);
+  }
+
+  /*
+   * Phones, top to bottom: photo, Prev / count / Next, title and text, "Next project".
+   * The viewer's parts join the page grid directly so they can be ordered around the text.
+   */
+  .viewer {
+    display: contents;
+  }
+
+  .frame {
+    order: 1;
+  }
+
+  .controls {
+    order: 2;
+  }
+
+  .text {
+    order: 3;
+  }
+
+  .caption {
+    order: 4;
+    justify-content: flex-start;
+  }
+
+  .text {
+    gap: var(--space-gutter);
+    padding-top: 0;
+  }
+
+  .frame,
+  .photo {
+    height: auto;
+  }
+}

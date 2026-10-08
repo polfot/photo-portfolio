@@ -1,0 +1,233 @@
+/* White behind the slides, so nothing dark shows while a slide moves in or a photo is still loading. */
+.slideshow {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--color-paper);
+}
+
+/* Each project is a full-screen split: text panel on the left, feature photo on the right. */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.slide[data-role="idle"] {
+  visibility: hidden;
+}
+
+.slide[data-role="enter"] {
+  z-index: 2;
+}
+
+.slide[data-role="exit"] {
+  z-index: 1;
+}
+
+.slide[data-direction] {
+  animation-duration: var(--motion-slide);
+  animation-timing-function: var(--ease-slide);
+  animation-fill-mode: both;
+}
+
+.slide[data-role="enter"][data-direction="next"] {
+  animation-name: enter-from-below;
+}
+
+.slide[data-role="exit"][data-direction="next"] {
+  animation-name: exit-to-top;
+}
+
+.slide[data-role="enter"][data-direction="prev"] {
+  animation-name: enter-from-above;
+}
+
+.slide[data-role="exit"][data-direction="prev"] {
+  animation-name: exit-to-bottom;
+}
+
+@keyframes enter-from-below {
+  from { transform: translateY(100%); }
+}
+
+@keyframes enter-from-above {
+  from { transform: translateY(-100%); }
+}
+
+@keyframes exit-to-top {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+
+@keyframes exit-to-bottom {
+  to { transform: translateY(100%); visibility: hidden; }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-fluid);
+  padding: var(--header-height) var(--space-gutter);
+  background: var(--color-paper);
+}
+
+.detailPhoto {
+  width: var(--size-home-detail-photo);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.description {
+  max-width: var(--measure-statement);
+  font-size: var(--text-statement);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.feature {
+  position: relative;
+  overflow: hidden;
+}
+
+.featurePhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.openProject {
+  position: absolute;
+  right: var(--space-gutter);
+  bottom: var(--space-gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  height: var(--size-control);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-on-photo);
+  text-shadow: var(--shadow-on-photo);
+}
+
+.openProject:hover {
+  opacity: 1;
+}
+
+.openProjectArrow {
+  display: flex;
+  filter: drop-shadow(var(--shadow-on-photo));
+  transition: transform var(--motion-fast);
+}
+
+.openProject:hover .openProjectArrow {
+  transform: translateX(var(--hover-nudge));
+}
+
+.controls {
+  position: absolute;
+  left: var(--space-gutter);
+  bottom: var(--space-gutter);
+  z-index: 3;
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+}
+
+/* Vertical page indicator on the left edge; the active project's dot is dark. */
+.dots {
+  position: absolute;
+  top: 50%;
+  left: var(--space-gutter);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  translate: 0 -50%;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: var(--size-dot-target);
+  height: var(--size-dot-target);
+}
+
+.dot::before {
+  content: "";
+  width: var(--size-dot);
+  height: var(--size-dot);
+  border-radius: 50%;
+  background: var(--color-indicator);
+  transition: background var(--motion-fast);
+}
+
+.dot[aria-current="true"]::before {
+  background: var(--color-indicator-active);
+}
+
+@media (max-width: 767px) {
+  .dots {
+    display: none;
+  }
+
+  /* Same photo height on every slide, whatever the length of its text. */
+  .slide {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--size-home-photo-mobile) 1fr;
+    padding-top: var(--header-height);
+    background: var(--color-paper);
+  }
+
+  .feature {
+    order: -1;
+  }
+
+  /* Leave room at the bottom for the arrow controls. */
+  .panel {
+    padding: var(--space-gutter) var(--space-gutter) calc(var(--space-gutter) * 2 + var(--size-control));
+  }
+
+  .detailPhoto {
+    display: none;
+  }
+
+  /* Arrows on the right on phones. */
+  .controls {
+    left: auto;
+    right: var(--space-gutter);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide[data-direction] {
+    animation-timing-function: ease;
+  }
+
+  .slide[data-role="enter"][data-direction] {
+    animation-name: fade-in;
+  }
+
+  .slide[data-role="exit"][data-direction] {
+    animation-name: fade-out;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+
+  @keyframes fade-out {
+    to { opacity: 0; visibility: hidden; }
+  }
+}

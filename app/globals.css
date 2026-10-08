@@ -1,0 +1,263 @@
+/*
+ * Design tokens: the single place for colours, type, spacing and motion.
+ * Components only reference these variables, never raw values.
+ *
+ * Media queries cannot read CSS variables, so the one breakpoint is repeated
+ * as `@media (max-width: 767px)` in the component stylesheets.
+ */
+:root {
+  /* Palette */
+  --color-white: #fff;
+  --color-ink: #1d1d1b;
+  --color-ink-muted: #6f6e6a;
+  --color-panel: #e8e7e4;
+  --color-rule: #e4e3df;
+  --color-grey: #b5b3ae;
+  --color-danger: #a8321e;
+
+  /* Colour roles */
+  --color-paper: var(--color-white);
+  --color-on-photo: var(--color-white);
+  --color-header-mobile: var(--color-paper);
+  --shadow-on-photo: 0 0 12px rgb(0 0 0 / 0.35);
+  --border-hairline: 1px solid var(--color-rule);
+  --color-indicator: var(--color-grey);
+  --color-indicator-active: var(--color-ink);
+
+  /* One typeface for the whole site. */
+  --font-base: var(--font-newsreader), "Times New Roman", serif;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: clamp(1rem, 1.4vw, 1.25rem);
+  --text-nav: 0.9375rem;
+  --text-logo: clamp(1.1rem, 1.6vw, 1.4rem);
+  --text-statement: clamp(0.85rem, 1.05vw, 1rem);
+
+  --leading-body: 1.4;
+  --leading-tight: 1.3;
+
+  --tracking-tight: 0.02em;
+  --tracking-normal: 0.04em;
+  --tracking-wide: 0.08em;
+  --tracking-wider: 0.12em;
+
+  /* Spacing */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1.25rem;
+  --space-fluid: clamp(1rem, 2.5vw, 2rem);
+  --space-gutter: clamp(1.5rem, 4vw, 3.5rem);
+  --space-section: clamp(3rem, 10vh, 7rem);
+
+  /* Sizes */
+  --size-control: 2.25rem;
+  --size-logo: clamp(1rem, 1.5vw, 1.375rem);
+  --size-loading-icon: 4rem;
+  --size-dot: 6px;
+  --size-dot-target: 1.25rem;
+  --size-home-detail-photo: clamp(9rem, 18vw, 16rem);
+  --size-home-photo-mobile: 62svh;
+  --size-about-portrait: clamp(8rem, 11vw, 12rem);
+  --measure-statement: 34ch;
+  --measure-text: 48ch;
+  --measure-excerpt: 24ch;
+  --measure-form: 40rem;
+  --size-admin-content: 72rem;
+  --size-admin-thumb: 3rem;
+  --size-admin-card: 12rem;
+  --size-portfolio-photo: clamp(14rem, 26vw, 26rem);
+  --header-height: calc(var(--space-gutter) * 2 + 1.5rem);
+
+  /* Interaction */
+  --opacity-hover: 0.5;
+  --hover-nudge: 4px;
+  --focus-offset: 4px;
+
+  /* Motion */
+  --motion-fast: 200ms;
+  /* Every fade on the site: things leave in fade-out time, arrive in fade-in time. */
+  --motion-fade-out: 400ms;
+  --motion-fade-in: 500ms;
+  --motion-pulse: 1.4s;
+  --motion-slide: 1100ms;
+  --ease-slide: cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reserve the scrollbar space on every page, so long pages don't shift the header sideways. */
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-base);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a,
+button {
+  color: inherit;
+  transition: opacity var(--motion-fast);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a:hover,
+button:hover {
+  opacity: var(--opacity-hover);
+}
+
+:focus-visible {
+  outline: var(--border-hairline);
+  outline-color: currentColor;
+  outline-offset: var(--focus-offset);
+}
+
+/*
+ * Page frame shared by all inner pages: exactly one screen tall on desktop,
+ * header on top and <main> filling the rest, so nothing needs to scroll.
+ */
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+}
+
+.screen > main {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Long text pages (privacy) scroll as a whole page, with the browser's own scrollbar. */
+.screen[data-scroll] {
+  height: auto;
+  min-height: 100svh;
+}
+
+@media (max-width: 767px) {
+  .screen {
+    height: auto;
+    min-height: 100svh;
+  }
+}
+
+/* Live content fades in once it has loaded from Supabase (see components/views/Loaded.tsx). */
+.appear {
+  height: 100%;
+  animation: var(--motion-fade-in) ease both page-fade-in;
+}
+
+/* Covers the page under the header while live content and its first photos load (LoadingScreen.tsx). */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: var(--color-paper);
+}
+
+.loading-screen img {
+  height: var(--size-loading-icon);
+  mix-blend-mode: multiply;
+  animation: loading-pulse var(--motion-pulse) ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  50% { opacity: var(--opacity-hover); }
+}
+
+.status-message {
+  padding: var(--space-section) var(--space-gutter);
+}
+
+/* Hidden on screen, still read by screen readers and search engines (also used to preload images). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * View transitions (React <ViewTransition>):
+ * - page-fade: every page navigation, see app/template.tsx
+ * The header is named "site-header" and stays put.
+ */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root) {
+  animation-duration: var(--motion-fade-out);
+}
+
+::view-transition-new(root) {
+  animation-duration: var(--motion-fade-in);
+}
+
+::view-transition-old(.page-fade) {
+  animation: var(--motion-fade-out) ease both page-fade-out;
+}
+
+::view-transition-new(.page-fade) {
+  animation: var(--motion-fade-in) ease both page-fade-in;
+}
+
+::view-transition-group(site-header) {
+  z-index: 1;
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes page-fade-out {
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}

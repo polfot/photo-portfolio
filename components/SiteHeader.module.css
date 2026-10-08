@@ -1,0 +1,75 @@
+/* Identical on every page: same type, same spacing, so the logo and menu never move. */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-gutter);
+  height: var(--header-height);
+  padding-inline: var(--space-gutter);
+  /* Its own layer above the page, so the open mobile menu covers the content below. */
+  position: relative;
+  z-index: 10;
+}
+
+/* The logo file has a white background; multiply drops it on the light header colours. */
+.logo img {
+  height: var(--size-logo);
+  width: auto;
+  mix-blend-mode: multiply;
+}
+
+.nav,
+.menuToggle {
+  font-size: var(--text-nav);
+  letter-spacing: var(--tracking-normal);
+}
+
+.nav ul {
+  display: flex;
+  gap: var(--space-fluid);
+  list-style: none;
+}
+
+.menuToggle {
+  display: none;
+}
+
+/* Overlay variant: same header, fixed on top of the full-screen home slideshow. */
+.header[data-variant="overlay"] {
+  position: fixed;
+  inset: 0 0 auto;
+  pointer-events: none;
+}
+
+.header[data-variant="overlay"] > * {
+  pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  .header,
+  .nav {
+    background: var(--color-header-mobile);
+  }
+
+  .menuToggle {
+    display: block;
+  }
+
+  .nav {
+    position: fixed;
+    inset: var(--header-height) 0 0;
+    z-index: 10;
+    display: none;
+    padding: var(--space-gutter);
+  }
+
+  .header[data-menu-open="true"] .nav {
+    display: block;
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: var(--space-sm);
+    font-size: var(--text-md);
+  }
+}

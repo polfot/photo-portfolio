@@ -1,0 +1,57 @@
+/* Inside the shared .screen frame: portrait, text and footer pushed to the bottom. */
+.main {
+  padding: var(--space-section) var(--space-gutter);
+}
+
+/* Two equal columns, matching the project page split. */
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-section);
+  height: 100%;
+  align-content: end;
+  align-items: end;
+}
+
+.portrait {
+  width: var(--size-about-portrait);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.text {
+  display: grid;
+  gap: var(--space-fluid);
+}
+
+.bio {
+  max-width: var(--measure-statement);
+  line-height: var(--leading-tight);
+}
+
+.list {
+  list-style: none;
+}
+
+/* Same distance from the left and bottom edges; line-height 1 so the text itself sits on that margin. */
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 var(--space-gutter) var(--space-gutter);
+  font-size: var(--text-xs);
+  line-height: 1;
+}
+
+/* Reads bottom-to-top along the right edge. */
+.vertical {
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+}
+
+@media (max-width: 767px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: var(--space-gutter);
+  }
+}

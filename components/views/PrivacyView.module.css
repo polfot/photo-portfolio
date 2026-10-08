@@ -1,0 +1,63 @@
+/* Same two-column split as the other pages: heading on the left, text on the right.
+   The whole page scrolls; the heading stays in view beside the text. */
+.main {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: var(--space-section);
+  padding: 0 var(--space-gutter) var(--space-section);
+}
+
+.heading {
+  position: sticky;
+  top: var(--space-gutter);
+  align-self: start;
+  display: grid;
+  align-content: start;
+  gap: var(--space-xs);
+}
+
+.title {
+  font-size: var(--text-md);
+  font-weight: 400;
+}
+
+.updated {
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: var(--space-fluid);
+  max-width: var(--measure-text);
+  line-height: var(--leading-body);
+}
+
+.body section {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.body h2 {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--color-ink-muted);
+}
+
+.body a {
+  text-decoration: underline;
+  text-underline-offset: var(--focus-offset);
+}
+
+@media (max-width: 767px) {
+  .main {
+    grid-template-columns: 1fr;
+    gap: var(--space-fluid);
+    padding-top: var(--space-gutter);
+  }
+
+  .heading {
+    position: static;
+  }
+}

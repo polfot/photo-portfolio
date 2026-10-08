@@ -1,0 +1,135 @@
+/* Two columns like the other pages: project titles on the left, hover preview on the right. */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-section);
+  height: 100%;
+  padding: var(--space-section) var(--space-gutter) var(--space-gutter);
+}
+
+/* A long list scrolls inside its column instead of growing the page. */
+.list {
+  min-height: 0;
+  overflow-y: auto;
+  list-style: none;
+  font-size: var(--text-md);
+  line-height: var(--leading-tight);
+}
+
+/* Non-active titles are muted so the hovered one reads as selected. */
+.link {
+  color: var(--color-ink-muted);
+}
+
+.link[aria-current="true"] {
+  color: var(--color-ink);
+}
+
+.link:hover {
+  opacity: 1;
+}
+
+.preview {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-section);
+  min-height: 0;
+}
+
+.counter {
+  font-size: var(--text-xs);
+}
+
+.stack {
+  display: grid;
+  min-height: 0;
+}
+
+/* Every preview sits in the same grid cell; only the active one is visible. */
+.item {
+  display: flex;
+  grid-area: 1 / 1;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-height: 0;
+  gap: var(--space-fluid);
+  opacity: 0;
+  transition: opacity var(--motion-fade-in);
+}
+
+.item[data-active="true"] {
+  opacity: 1;
+}
+
+.excerpt {
+  display: -webkit-box;
+  max-width: var(--measure-excerpt);
+  overflow: hidden;
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Takes the height left on screen, capped at its preferred width. */
+.photo {
+  height: 100%;
+  max-width: var(--size-portfolio-photo);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+/* No hover on phones: the list links straight to each project. */
+/* Phone strips: hidden on desktop, where the hover index above is used instead. */
+.strips {
+  display: none;
+}
+
+/*
+ * Phones: one block per project: title and "[ View ]", then its first photos edge to edge,
+ * all the same height (widths follow each photo's proportions, see PortfolioIndex.tsx).
+ */
+@media (max-width: 767px) {
+  .layout {
+    display: none;
+  }
+
+  .strips {
+    display: grid;
+    gap: calc(var(--space-gutter) * 2);
+    padding-block: var(--space-gutter) var(--space-section);
+    list-style: none;
+  }
+
+  .project {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .projectHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    padding-inline: var(--space-gutter);
+  }
+
+  .projectTitle {
+    font-size: var(--text-md);
+    font-weight: 400;
+  }
+
+  .strip {
+    display: flex;
+  }
+
+  .strip:hover {
+    opacity: 1;
+  }
+
+  .stripPhoto {
+    flex-basis: 0;
+    min-width: 0;
+    object-fit: cover;
+  }
+}
